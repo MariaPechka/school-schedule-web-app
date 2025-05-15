@@ -16,9 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from apiapp.views import show_lessons
+from rest_framework.routers import SimpleRouter
+
+from apiapp.views import LevelViewSet, EduparallelViewSet, SubjectViewSet  #, get_complexity
+
+
+router = SimpleRouter()
+router.register(r'level', LevelViewSet)
+router.register(r'eduparallel', EduparallelViewSet)
+router.register(r'subject', SubjectViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lessons/', show_lessons)
+    # path('lessons/', show_lessons),
+    # path('', get_complexity)
 ]
+urlpatterns += router.urls

@@ -20,7 +20,7 @@ class Eduparallel(models.Model):
     level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return str(self.year)
+        return f'{str(self.year)} - {self.level.title}'
     
 
 class Complexity(models.Model):

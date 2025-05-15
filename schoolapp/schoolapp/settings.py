@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
     'apiapp',
 ]
 
@@ -76,11 +78,17 @@ WSGI_APPLICATION = 'schoolapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'school_app_db',
+        'USER': 'school_app_admin',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': 5432,
+        # 'OPTIONS': {
+        #     'options': '-c search_path=school-schedule-app-schema'
+        # },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
