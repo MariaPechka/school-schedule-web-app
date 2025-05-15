@@ -18,13 +18,15 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import SimpleRouter
 
-from apiapp.views import LevelViewSet, EduparallelViewSet, SubjectViewSet  #, get_complexity
+from apiapp.views import LevelViewSet, EduparallelViewSet
+from apiapp.views import SubjectViewSet, ComplexityViewSet
 
 
 router = SimpleRouter()
 router.register(r'level', LevelViewSet)
 router.register(r'eduparallel', EduparallelViewSet)
 router.register(r'subject', SubjectViewSet)
+router.register(r'complexity', ComplexityViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from apiapp.models import Level, Eduparallel, Subject
+from apiapp.models import Level, Eduparallel, Subject, Complexity
 
 
 class LevelSerializer(ModelSerializer):
@@ -18,6 +18,12 @@ class EduarallelSerializer(ModelSerializer):
 class SubjectSerializer(ModelSerializer):
     class Meta:
         model = Subject
+        fields = '__all__'
+
+
+class ComplexitySerializer(ModelSerializer):
+    class Meta:
+        model = Complexity
         fields = '__all__'
 
 

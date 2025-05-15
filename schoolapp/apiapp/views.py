@@ -4,7 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 import requests
 
 from apiapp.models import Level,  Eduparallel, Subject, Complexity
-from apiapp.serializers import LevelSerializer, EduarallelSerializer, SubjectSerializer
+from apiapp.serializers import LevelSerializer, EduarallelSerializer
+from apiapp.serializers import SubjectSerializer, ComplexitySerializer
 
 
 class LevelViewSet(ModelViewSet):
@@ -20,6 +21,14 @@ class EduparallelViewSet(ModelViewSet):
 class SubjectViewSet(ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+
+
+class ComplexityViewSet(ModelViewSet):
+    queryset = Complexity.objects.all()
+    serializer_class = ComplexitySerializer
+
+
+
 # Create your views here.
 # def show_lessons(request):
 #     all_complexity = Complexity.objects.all()
