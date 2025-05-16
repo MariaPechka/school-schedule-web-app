@@ -1,5 +1,5 @@
 from .parce_word import dict_edupar_subject_compl, sbj_list
-from .parce_word import dict_level_edupar as dle
+from .parce_word import dict_level_edupar
 from apiapp.models import Level, Subject, Complexity, Eduparallel
 
 
@@ -10,7 +10,6 @@ def insert_levels(dict_level_edupar:dict):
 
 def insert_eduparallels(dict_level_edupar:dict):
     for level in dict_level_edupar:
-        # print(dict_level_edupar[level])
         level_obj = Level.objects.get(title=level)
         for par in dict_level_edupar[level]:
             Eduparallel.objects.create(year=par,
@@ -31,4 +30,7 @@ def insert_complexity(dict_edupar_subject_compl:dict):
             Complexity.objects.create(eduparallel=edu_obj,
                                       subject=sbj_obj,
                                       complexity=compl)
-            # print(edu, sbj, compl)
+
+
+
+                 

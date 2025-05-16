@@ -75,7 +75,6 @@ class InsertDataApiTestCase(APITestCase):
         serializer_response = SubjectSerializer(Subject.objects.all(), many=True)
         self.assertCountEqual(serializer_response.data, response.data)
 
-
     def test_insert_complexity(self):
         insert_levels(self.level_year_dict)
         insert_eduparallels(self.level_year_dict)
@@ -92,3 +91,6 @@ class InsertDataApiTestCase(APITestCase):
 
 
         
+
+# МАТЕМАТИКА И ИЗО НЕ ОТОБРЖАЮТСЯ НИ У КОГО! 
+# ПАЛОЧКА НЕ ПОФИКСИЛАСЬ

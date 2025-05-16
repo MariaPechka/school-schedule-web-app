@@ -44,19 +44,22 @@ for i in range(doc.Sections.Count):
             for col in range(table.Rows.get_Item(row).Cells.Count):
                 cell = table.Rows.get_Item(row).Cells.get_Item(col)
                 par_text = cell.Paragraphs.get_Item(0).Text    # Извлечение данных из ячейки таблицы
-                
+                print('Par_text ->', par_text)
                 # # Избавление от вложенности (Математика)
                 # if '(' in par_text and 'Общ' not in par_text:
                 #         par_text = par_text[par_text.index('(')+1 : par_text.index(')')].capitalize()
 
                 sbj_compl.append(par_text) # Добавление значения ячейки в список             
             
+            print('sbj_compl ----->', sbj_compl)
             # Проверка, что в списке всего один предмет
-            if not (sbj_compl[1].isdigit() or sbj_compl[1] == '-'):
+            if not (sbj_compl[1].isdigit() or sbj_compl[1].strip() == '-'):
                 sbj_compl.pop(0)  # Убираем пропуск или лишний предмет 
+                print('Pop[0] ------>', sbj_compl)
 
             # Если в списке нет предмета или список состоит только из слов, данные не добавляются
             if len(sbj_compl[0])<2 or not (sbj_compl[-1].isdigit() or sbj_compl[-1] == '-'):
+                print('CONTINUE')
                 continue
 
             # Добавление данных в словарь в соответствующие классы
@@ -75,21 +78,34 @@ for i in range(doc.Sections.Count):
             #             dict_edupar_subject_compl[eduparallel][sbj.strip()] = sbj_compl[1]  
 
             sbj_split = sbj_compl[0].split(',')
-            # print(sbj_split)
+            print('ПОДЕЛИЛИ sbj_split -', sbj_split)
             for sbj in sbj_split:
                 sbj = sbj.strip()
                 # Избавление от вложенности везде, кроме 'Обществознание (включая экономику и право)'
                 if '(' in sbj and 'Общ' not in sbj:
                         sbj = sbj[sbj.index('(')+1 : sbj.index(')')].capitalize()
+                        print('РАСКСРЫЛИ СКОБКИ -', sbj)
 
                 if 'Мхк' in sbj:
                     sbj = 'Мировая художественная культура'
+                    print('МХК --->', sbj)
 
                 sbj_list.append(sbj)
+                print('ИТОГОВЫЙ sbj -------------->', sbj)
 
                 for ind, eduparallel in enumerate(dict_level_edupar[list(dict_level_edupar.keys())[j]]):
-                    dict_edupar_subject_compl[eduparallel][sbj] = sbj_compl[1] if len(sbj_compl) == 2 else sbj_compl[ind+1]
+                    print('ЗАШЛИ В ДОБАВЛЕНИЕ (ind, eduparallel) ->', ind, eduparallel)
+                    if len(sbj_compl) == 2:
+                        dict_edupar_subject_compl[eduparallel][sbj] = sbj_compl[1]
+                    elif sbj_compl[ind+1] == '-':
+                        continue
+                    else:
+                        dict_edupar_subject_compl[eduparallel][sbj] = sbj_compl[ind+1]
+                    print('ДОБАВИЛОСЬ (edu, sbj, compl): --->', eduparallel, sbj, dict_edupar_subject_compl[eduparallel][sbj])
+                    
+                    # dict_edupar_subject_compl[eduparallel][sbj] = sbj_compl[1] if len(sbj_compl) == 2 else sbj_compl[ind+1]
                 
+                print()
 
 sbj_list = list(set(sbj_list))
 
@@ -100,3 +116,5 @@ def show_result(dict_edupar_subject_compl):
         for sbj in dict_edupar_subject_compl[edupar].keys():
             print(sbj, dict_edupar_subject_compl[edupar][sbj])
         print('\n')
+
+# show_result(dict_edupar_subject_compl)
