@@ -33,7 +33,10 @@ router.register(r'complexity', ComplexityViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('post/classroom/', views.add_classroom, name='add_classroom'),
+    path('classroom/', views.list_classroom, name='list_classroom'),
+    path('classroom/new/', views.add_classroom, name='add_classroom'),
+    path('classroom/<int:pk>/', views.classroom_detail, name='classroom_detail'),
+    path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit_classroom'),
     path('post/class/', views.add_class, name='add_class'),
     path('post/teacher/', views.add_teacher, name='add_teacher'),
     path('post/school-user/', views.add_schooluser, name='add_schooluser'),

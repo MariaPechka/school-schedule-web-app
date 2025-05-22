@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 import requests
 
@@ -10,6 +11,7 @@ from django.contrib.auth.models import User
 
 
 from apiapp.models import Level,  Eduparallel, Subject, Complexity
+from apiapp import models
 from apiapp.serializers import LevelSerializer, EduarallelSerializer
 from apiapp.serializers import SubjectSerializer, ComplexitySerializer
 from apiapp import forms
@@ -35,10 +37,39 @@ class ComplexityViewSet(ModelViewSet):
     serializer_class = ComplexitySerializer
 
 
+def list_classroom(request):
+    classrooms = models.Classroom.objects.all().order_by('name')
+    return render(request, 'classroom/classroom_list.html', {'posts': classrooms})
+
+
+def classroom_detail(request, pk):
+    post = get_object_or_404(models.Classroom, pk=pk)
+    return render(request, 'classroom/classroom_detail.html', {'post': post})
+
 
 def add_classroom(request):
-    form = forms.ClassroomForm()
-    return render(request, 'classroom_edit.html', {'form': form})
+    if request.method == "POST":
+        form = forms.ClassroomForm(request.POST)
+        if form.is_valid():
+            post = form.save()
+            post.save()
+            return redirect('classroom_detail', pk=post.pk)
+    else:
+        form = forms.ClassroomForm()
+    return render(request, 'classroom/classroom_edit.html', {'form': form})
+
+
+def edit_classroom(request, pk):
+    classroom = get_object_or_404(models.Classroom, pk=pk)
+    if request.method == "POST":
+        form = forms.ClassroomForm(request.POST, instance=classroom)
+        if form.is_valid():
+            post = form.save()
+            return redirect('classroom_detail', pk=post.pk)
+    else:
+        form = forms.ClassroomForm(instance=classroom)
+    return render(request, 'classroom/classroom_edit.html', {'form': form})
+
 
 
 def add_class(request):
