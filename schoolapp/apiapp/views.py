@@ -3,9 +3,16 @@ from django.http import HttpResponse
 from rest_framework.viewsets import ModelViewSet
 import requests
 
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.contrib.auth.models import User
+
+
 from apiapp.models import Level,  Eduparallel, Subject, Complexity
 from apiapp.serializers import LevelSerializer, EduarallelSerializer
 from apiapp.serializers import SubjectSerializer, ComplexitySerializer
+from apiapp import forms
 
 
 class LevelViewSet(ModelViewSet):
@@ -26,6 +33,31 @@ class SubjectViewSet(ModelViewSet):
 class ComplexityViewSet(ModelViewSet):
     queryset = Complexity.objects.all()
     serializer_class = ComplexitySerializer
+
+
+
+def add_classroom(request):
+    form = forms.ClassroomForm()
+    return render(request, 'classroom_edit.html', {'form': form})
+
+
+def add_class(request):
+    form = forms.ClassForm()
+    return render(request, 'class_edit.html', {'form': form})
+
+
+def add_teacher(request):
+    form = forms.TeacherForm()
+    return render(request, 'teacher_edit.html', {'form': form})
+
+
+def add_schooluser(request):
+    form = forms.SchoolUserForm()
+    return render(request, 'schooluser_edit.html', {'form': form})
+
+
+
+
 
 
 
