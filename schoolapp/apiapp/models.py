@@ -22,8 +22,8 @@ class Eduparallel(models.Model):
     level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        # return f'{str(self.year)} - {None}'
-        return f'{str(self.year)} - {self.level.title}'
+        return f'{str(self.year)}'
+        # return f'{str(self.year)} - {self.level.title}'
     
 
 class Complexity(models.Model):
@@ -51,6 +51,9 @@ class Classroom(models.Model):
     )
     type = models.CharField(choices=ROOM_TYPE_CHOICES, null=True)
     capacity = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.name} - {self.type} - {self.capacity}'
 
 
 class Class(models.Model):

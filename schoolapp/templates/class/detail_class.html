@@ -1,0 +1,10 @@
+{% extends 'class/base.html' %} {% block content %}
+<div class="class">
+  <a class="btn btn-default" href="{% url 'class_edit' pk=class.pk %}"
+    ><span class="glyphicon glyphicon-pencil"></span
+  ></a>
+  <h1>{{ class.eduparallel }}{{ class.letter }}</h1>
+  <p>{{ class.student_amount }}</p>
+  <p>{{ class.own_classroom|linebreaksbr }}</p>
+</div>
+{% endblock %}

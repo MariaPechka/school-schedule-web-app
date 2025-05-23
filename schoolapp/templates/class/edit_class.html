@@ -1,6 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'class/base.html' %} {% block content %}
 <h1>Новый класс</h1>
-<form method="POST" class="post-form">
+<form method="POST" class="class-form">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit" class="save btn btn-default">Сохранить</button>
 </form>

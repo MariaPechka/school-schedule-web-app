@@ -1,0 +1,11 @@
+{% extends 'class/base.html' %} {% block content %} {% for class in classes %}
+<div class="post">
+  <h1>
+    <a href="{% url 'class_detail' pk=class.pk %}"
+      >{{ class.eduparallel }}{{ class.letter }}</a
+    >
+  </h1>
+  <p>{{ class.student_amount }}</p>
+  <p>{{ class.own_classroom|linebreaksbr }}</p>
+</div>
+{% endfor %} {% endblock %}
