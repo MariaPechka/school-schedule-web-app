@@ -1,5 +1,6 @@
-{% extends 'class/base.html' %} {% block content %} {% for class in classes %}
-<div class="post">
+{% extends 'class/base.html' %} {% block content %} <wbr />
+{% for class in classes %}
+<div class="class_obj">
   <h1>
     <a href="{% url 'class_detail' pk=class.pk %}"
       >{{ class.eduparallel }}{{ class.letter }}</a

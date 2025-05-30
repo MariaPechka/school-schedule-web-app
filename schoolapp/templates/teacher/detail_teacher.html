@@ -1,0 +1,18 @@
+{% extends 'teacher/base_teacher.html' %} {% block content %}
+<div class="teacher">
+  <a class="btn btn-default" href="{% url 'teacher_edit' pk=teacher.pk %}"
+    ><span class="glyphicon glyphicon-pencil"></span
+  ></a>
+  <h1>
+    {{ teacher.surname }} {{ teacher.first_name }} {{ teacher.last_name }}
+  </h1>
+  {% for sbj in teacher.subjects.all %}
+  <p>{{ sbj.title }}</p>
+  {% endfor %} <wbr />
+  <p>
+    {% for par in teacher.eduparallels.all %}<wbr />
+    {{ par.year|linebreaksbr }}
+    <wbr /> {% endfor %}
+  </p>
+</div>
+{% endblock %}

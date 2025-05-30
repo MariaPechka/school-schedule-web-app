@@ -1,0 +1,13 @@
+{% extends 'teacher/base_teacher.html' %} {% block content %} <wbr />
+{% for teacher in teachers %}
+<div class="teacher">
+  <h1>
+    <a href="{% url 'teacher_detail' pk=teacher.pk %}"
+      >{{ teacher.surname }} {{ teacher.first_name }} {{ teacher.last_name }}</a
+    >
+  </h1>
+  {% for sbj in teacher.subjects.all %}
+  <p>{{ sbj.title|linebreaksbr }}</p>
+  {% endfor %}
+</div>
+{% endfor %} {% endblock %}

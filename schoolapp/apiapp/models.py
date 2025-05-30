@@ -27,8 +27,8 @@ class Eduparallel(models.Model):
     
 
 class Complexity(models.Model):
-    eduparallel = models.ForeignKey(Eduparallel, on_delete=models.SET_NULL, null=True)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    eduparallel = models.ForeignKey(Eduparallel, on_delete=models.SET_NULL, null=True, related_name='edu_complexities')
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, related_name='sbj_complexity')
     complexity = models.IntegerField(blank=False)
 
     def __str__(self):

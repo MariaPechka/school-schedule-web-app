@@ -1,4 +1,5 @@
-{% extends 'classroom/base.html' %} {% block content %} {% for post in posts %}
+{% extends 'classroom/base.html' %} {% block content %} <wbr />
+{% for post in posts %}
 <div class="post">
   <h1><a href="{% url 'edit_classroom' pk=post.pk %}">{{ post.name }}</a></h1>
   <p>{{ post.type|linebreaksbr }}</p>

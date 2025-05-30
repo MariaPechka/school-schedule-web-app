@@ -28,6 +28,7 @@ router.register(r'level', LevelViewSet)
 router.register(r'eduparallel', EduparallelViewSet)
 router.register(r'subject', SubjectViewSet)
 router.register(r'complexity', ComplexityViewSet)
+# router.register(r'teachers', views.TeacherViewSet, basename='teacher')
 # router.register(r'add_classroom', add_classroom)
 
 
@@ -40,11 +41,17 @@ urlpatterns = [
     path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit_classroom'),
 
     path('class/', views.class_list, name='class_list'),
-    path('class/new', views.class_add, name='class_add'),
+    path('class/new/', views.class_add, name='class_add'),
     path('class/<int:pk>/', views.class_detail, name='class_detail'),
     path('class/<int:pk>/edit', views.class_edit, name='class_edit'),
 
-    path('post/teacher/', views.add_teacher, name='add_teacher'),
+    path('teacher/', views.teacher_list, name='teacher_list'),
+    path('teacher/new/', views.teacher_add, name='teacher_add'),
+    path('teacher/<int:pk>/', views.teacher_detail, name='teacher_detail'),
+    path('teacher/<int:pk>/edit', views.teacher_edit, name='teacher_edit'),
+
+
+    # path('post/teacher/', views.add_teacher, name='add_teacher'),
 
     path('post/school-user/', views.add_schooluser, name='add_schooluser'),
     # path('lessons/', show_lessons),

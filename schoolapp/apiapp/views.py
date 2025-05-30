@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from rest_framework.viewsets import ModelViewSet
 import requests
 
@@ -14,6 +15,7 @@ from apiapp.models import Level,  Eduparallel, Subject, Complexity
 from apiapp import models
 from apiapp.serializers import LevelSerializer, EduarallelSerializer
 from apiapp.serializers import SubjectSerializer, ComplexitySerializer
+from apiapp import serializers
 from apiapp import forms
 
 
@@ -35,6 +37,24 @@ class SubjectViewSet(ModelViewSet):
 class ComplexityViewSet(ModelViewSet):
     queryset = Complexity.objects.all()
     serializer_class = ComplexitySerializer
+
+
+# class TeacherViewSet(ModelViewSet):
+#     queryset = models.Teacher.objects.all()#.prefetch_related('subjects')
+#     serializer_class = serializers.TeacherSerializer
+
+#     @action(methods=['get'], detail=False)
+#     def lists(self, request):
+#         return render(request, 'teacher/list_teacher.html', {'teachers': self.queryset})
+    
+
+#     @action(methods=['get'], detail=False)
+#     def teacher_detail(self, request, **kwargs):
+#         pk = kwargs.keys
+#         # teacher = get_object_or_404(models.Teacher, pk=pk)
+#         return render(request, 'teacher/detail_teacher.html', {'k':pk})
+
+
 
 
 # Classroom methods
@@ -65,8 +85,8 @@ def edit_classroom(request, pk):
     if request.method == "POST":
         form = forms.ClassroomForm(request.POST, instance=classroom)
         if form.is_valid():
-            post = form.save()
-            return redirect('detail_classroom', pk=post.pk)
+            form.save()
+            return redirect('list_classroom')
     else:
         form = forms.ClassroomForm(instance=classroom)
     return render(request, 'classroom/classroom_edit.html', {'form': form})
@@ -98,7 +118,7 @@ def class_edit(request, pk):
     if request.method == "POST":
         form = forms.ClassForm(request.POST, instance=class_get_obj)
         if form.is_valid():
-            class_obj = form.save()
+            form.save()
             return redirect('class_list')
     else:
         form = forms.ClassForm(instance=class_get_obj)
@@ -106,10 +126,46 @@ def class_edit(request, pk):
 
 
 
+# Teacher methods
+# def add_teacher(request):
+#     form = forms.TeacherForm()
+#     return render(request, 'teacher_edit.html', {'form': form})
 
-def add_teacher(request):
-    form = forms.TeacherForm()
-    return render(request, 'teacher_edit.html', {'form': form})
+def teacher_list(request):
+    teachers = models.Teacher.objects.all().prefetch_related('subjects').order_by(
+        'surname', 
+        'first_name', 
+        'last_name'
+    )
+    return render(request, 'teacher/list_teacher.html', {'teachers': teachers})
+
+def teacher_detail(request, pk):
+    teacher = get_object_or_404(models.Teacher, pk=pk)
+    return render(request, 'teacher/detail_teacher.html', {'teacher': teacher})
+
+def teacher_add(request):
+    if request.method == "POST":
+        form = forms.TeacherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('teacher_list')
+    else:
+        form = forms.TeacherForm()
+    return render(request, 'teacher/edit_teacher.html', {'form': form})
+
+def teacher_edit(request, pk):
+    teacher = get_object_or_404(models.Teacher, pk=pk)
+    if request.method == "POST":
+        form = forms.TeacherForm(request.POST, instance=teacher)
+        if form.is_valid():
+            form.save()
+            return redirect('teacher_list')
+    else:
+        form = forms.TeacherForm(instance=teacher)
+    return render(request, 'teacher/edit_teacher.html', {'form': form})
+
+
+
 
 
 def add_schooluser(request):
