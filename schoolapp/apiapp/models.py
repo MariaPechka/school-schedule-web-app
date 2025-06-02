@@ -29,12 +29,12 @@ class Eduparallel(models.Model):
 class Complexity(models.Model):
     eduparallel = models.ForeignKey(Eduparallel, on_delete=models.SET_NULL, null=True, related_name='edu_complexities')
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, related_name='sbj_complexity')
-    complexity = models.IntegerField(blank=False)
+    complexity = models.SmallIntegerField(blank=False)
+    hours_per_week = models.SmallIntegerField(null=True, default=None)
 
     def __str__(self):
         # return f'{None} - {None} {self.subject.title.upper()} {self.complexity}'
-        return f'{self.eduparallel.year} - {self.eduparallel.level} {self.subject.title.upper()} {self.complexity}'
-
+        return f'{self.eduparallel.year} - {self.eduparallel.level} {self.subject.title.upper()} {self.complexity} ---- {self.hours_per_week}h'
 
 
 class Classroom(models.Model):
