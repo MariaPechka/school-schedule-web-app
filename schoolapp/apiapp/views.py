@@ -126,11 +126,6 @@ def class_edit(request, pk):
 
 
 
-# Teacher methods
-# def add_teacher(request):
-#     form = forms.TeacherForm()
-#     return render(request, 'teacher_edit.html', {'form': form})
-
 def teacher_list(request):
     teachers = models.Teacher.objects.all().prefetch_related('subjects').order_by(
         'surname', 
