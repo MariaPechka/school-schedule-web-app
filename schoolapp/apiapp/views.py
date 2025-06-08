@@ -55,41 +55,48 @@ class ComplexityViewSet(ModelViewSet):
 #         return render(request, 'teacher/detail_teacher.html', {'k':pk})
 
 
+# Schedule Methods
+def schedule_prepare(request):
+    return render(request, 'schedule/prepare_schedule.html')#, {'classrooms': classrooms})
+    
 
-
-# Classroom methods
-def list_classroom(request):
+# Classroom Methods
+def classroom_list(request):
     classrooms = models.Classroom.objects.all().order_by('name')
-    return render(request, 'classroom/classroom_list.html', {'posts': classrooms})
+    return render(request, 'classroom/list_classroom.html', {'classrooms': classrooms})
 
 
-def detail_classroom(request, pk):
-    post = get_object_or_404(models.Classroom, pk=pk)
-    return render(request, 'classroom/classroom_detail.html', {'post': post})
+def classroom_detail(request, pk):
+    classroom = get_object_or_404(models.Classroom, pk=pk)
+    return render(request, 'classroom/detail_classroom.html', {'classroom': classroom})
 
 
-def add_classroom(request):
+def classroom_add(request):
     if request.method == "POST":
         form = forms.ClassroomForm(request.POST)
         if form.is_valid():
             post = form.save()
             post.save()
-            return redirect('detail_classroom', pk=post.pk)
+            return redirect('classroom_list')
     else:
         form = forms.ClassroomForm()
-    return render(request, 'classroom/classroom_edit.html', {'form': form})
+    return render(request, 'classroom/edit_classroom.html', {'form': form})
 
 
-def edit_classroom(request, pk):
+def classroom_edit(request, pk):
     classroom = get_object_or_404(models.Classroom, pk=pk)
     if request.method == "POST":
         form = forms.ClassroomForm(request.POST, instance=classroom)
         if form.is_valid():
             form.save()
-            return redirect('list_classroom')
+            return redirect('classroom_list')
     else:
         form = forms.ClassroomForm(instance=classroom)
-    return render(request, 'classroom/classroom_edit.html', {'form': form})
+    return render(request, 'classroom/edit_classroom.html', {'form': form})
+
+def classroom_delete(request, pk):
+    models.Classroom.objects.filter(id=pk).delete()
+    return redirect('classroom_list')
 
 
 
@@ -124,8 +131,13 @@ def class_edit(request, pk):
         form = forms.ClassForm(instance=class_get_obj)
     return render(request, 'class/edit_class.html', {'form': form})
 
+def class_delete(request, pk):
+    models.Class.objects.filter(id=pk).delete()
+    return redirect('class_list')
+    
 
 
+# Teacher Methods
 def teacher_list(request):
     teachers = models.Teacher.objects.all().prefetch_related('subjects').order_by(
         'surname', 
@@ -158,6 +170,10 @@ def teacher_edit(request, pk):
     else:
         form = forms.TeacherForm(instance=teacher)
     return render(request, 'teacher/edit_teacher.html', {'form': form})
+
+def teacher_delete(request, pk):
+    models.Teacher.objects.filter(id=pk).delete()
+    return redirect('teacher_list')
 
 
 

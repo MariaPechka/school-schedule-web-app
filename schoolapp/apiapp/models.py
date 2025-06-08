@@ -66,9 +66,17 @@ class Class(models.Model):
         ('Д', 'Д'),
     )
     letter = models.CharField(choices=LETTER_CHOICES, blank=False)
-    own_classroom = models.OneToOneField(Classroom, on_delete=models.SET_DEFAULT, default='Нет свого класса')
+    own_classroom = models.OneToOneField(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
     student_amount = models.PositiveIntegerField()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['eduparallel', 'letter'], name='unique_class'),
+        ]
+
+    def __str__(self):
+        return f'{self.eduparallel.year}{self.letter}'
+    
 
 class Teacher(models.Model):
     surname = models.CharField(max_length=50, blank=False)
@@ -76,6 +84,9 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=50, blank=True)
     subjects = models.ManyToManyField(Subject)
     eduparallels = models.ManyToManyField(Eduparallel)
+
+    def __str__(self):
+        return f'{self.surname} {self.first_name} {self.last_name}'
 
 
 class SchoolUser(models.Model):

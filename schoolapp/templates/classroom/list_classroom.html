@@ -1,0 +1,13 @@
+{% extends 'classroom/base_classroom.html' %} {% block content %} <wbr />
+<div class="header-name"><h1>Список кабинетов</h1></div>
+{% for classroom in classrooms %}
+<div class="classroom">
+  <h1>
+    <a href="{% url 'classroom_detail' pk=classroom.pk %}"
+      >{{ classroom.name }}</a
+    >
+  </h1>
+  <p>{{ classroom.type|linebreaksbr }}</p>
+  <p>{{ classroom.capacity|linebreaksbr }}</p>
+</div>
+{% endfor %} {% endblock %}

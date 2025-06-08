@@ -1,10 +1,13 @@
-{% extends 'class/base.html' %} {% block content %}
-<div class="class_obj">
-  <a class="btn btn-default" href="{% url 'class_edit' pk=class.pk %}"
-    ><span class="glyphicon glyphicon-pencil"></span
+{% extends 'class/base_class.html' %} {% block content %}
+<div class="obj">
+  <a class="btn btn-default trash" href="{% url 'class_delete' pk=class.pk %}"
+    ><span class="glyphicon glyphicon-trash"></span
   ></a>
   <h1>{{ class.eduparallel }}{{ class.letter }}</h1>
   <p>{{ class.student_amount }}</p>
   <p>{{ class.own_classroom|linebreaksbr }}</p>
+  <a class="btn btn-default pencil" href="{% url 'class_edit' pk=class.pk %}"
+    ><span class="glyphicon glyphicon-pencil"></span
+  ></a>
 </div>
 {% endblock %}

@@ -22,6 +22,7 @@ class GraphColoringProblem:
         # adjacency matrix of the nodes -
         # matrix[i,j] equals '1' if nodes i and j are connected, or '0' otherwise:
         self.adjMatrix = nx.adjacency_matrix(graph).todense()
+        # super().__init__()
 
     def __len__(self):
         """
@@ -72,7 +73,7 @@ class GraphColoringProblem:
         """
         return len(set(colorArrangement))
 
-    def plotGraph(self, colorArrangement):
+    def plotGraphC(self, colorArrangement):
         """
         Plots the graph with the nodes colored according to the given color arrangement
         :param colorArrangement: a list of integers representing the suggested color arrangement fpo the nodes,
@@ -94,8 +95,11 @@ class GraphColoringProblem:
             color = colors[colorList.index(colorArrangement[i])]
             colorMap.append(color)
 
+        # nx.draw_kamada_kawai
         # plot the nodes with their labels and matching colors:
-        nx.draw_kamada_kawai(self.graph, node_color=colorMap, with_labels=True)
+        nx.draw_networkx(self.graph, pos=nx.spring_layout(self.graph), node_color=colorMap, node_size=100,
+            width=1,
+            font_size=10, with_labels=True)
         #nx.draw_circular(self.graph, node_color=color_map, with_labels=True)
 
         return plt

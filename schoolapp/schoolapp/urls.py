@@ -35,22 +35,25 @@ router.register(r'complexity', ComplexityViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('classroom/', views.list_classroom, name='list_classroom'),
-    path('classroom/new/', views.add_classroom, name='add_classroom'),
-    path('classroom/<int:pk>/', views.detail_classroom, name='detail_classroom'),
-    path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit_classroom'),
+    path('classroom/', views.classroom_list, name='classroom_list'),
+    path('classroom/new/', views.classroom_add, name='classroom_add'),
+    path('classroom/<int:pk>/', views.classroom_detail, name='classroom_detail'),
+    path('classroom/<int:pk>/edit/', views.classroom_edit, name='classroom_edit'),
+    path('classroom/<int:pk>/delete', views.classroom_delete, name='classroom_delete'),
 
     path('class/', views.class_list, name='class_list'),
     path('class/new/', views.class_add, name='class_add'),
     path('class/<int:pk>/', views.class_detail, name='class_detail'),
     path('class/<int:pk>/edit', views.class_edit, name='class_edit'),
+    path('class/<int:pk>/delete', views.class_delete, name='class_delete'),
 
     path('teacher/', views.teacher_list, name='teacher_list'),
     path('teacher/new/', views.teacher_add, name='teacher_add'),
     path('teacher/<int:pk>/', views.teacher_detail, name='teacher_detail'),
     path('teacher/<int:pk>/edit', views.teacher_edit, name='teacher_edit'),
+    path('teacher/<int:pk>/delete', views.teacher_delete, name='teacher_delete'),
 
-
+    path('schedule/prepare', views.schedule_prepare, name='schedule_prepare'),
     # path('post/teacher/', views.add_teacher, name='add_teacher'),
 
     path('post/school-user/', views.add_schooluser, name='add_schooluser'),

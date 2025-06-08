@@ -1,7 +1,9 @@
 {% extends 'teacher/base_teacher.html' %} {% block content %}
-<div class="teacher">
-  <a class="btn btn-default" href="{% url 'teacher_edit' pk=teacher.pk %}"
-    ><span class="glyphicon glyphicon-pencil"></span
+<div class="obj">
+  <a
+    class="btn btn-default trash"
+    href="{% url 'teacher_delete' pk=teacher.pk %}"
+    ><span class="glyphicon glyphicon-trash"></span
   ></a>
   <h1>
     {{ teacher.surname }} {{ teacher.first_name }} {{ teacher.last_name }}
@@ -14,5 +16,10 @@
     {{ par.year|linebreaksbr }}
     <wbr /> {% endfor %}
   </p>
+  <a
+    class="btn btn-default pencil"
+    href="{% url 'teacher_edit' pk=teacher.pk %}"
+    ><span class="glyphicon glyphicon-pencil"></span
+  ></a>
 </div>
 {% endblock %}

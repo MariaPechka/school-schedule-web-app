@@ -15,12 +15,15 @@
       rel="stylesheet"
       type="text/css"
     />
-    <!-- <link rel="stylesheet" href="{% static 'css/blog.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
   </head>
   <body>
     <div class="page-header">
-      <a href="{% url 'add_classroom' %}" class="top-menu"
+      <a href="{% url 'classroom_add' %}" class="top-menu"
         ><span class="glyphicon glyphicon-plus"></span
+      ></a>
+      <a href="{% url 'schedule_prepare' %}" class="top-menu"
+        ><span class="glyphicon glyphicon-calendar"></span
       ></a>
       <h1><a href="/">School-schedule-web-app</a></h1>
     </div>

@@ -1,5 +1,5 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Новый преподаватель</h1>
+{% extends 'classroom/base_classroom.html' %} {% block content %}
+<div class="header-name"><h1>Новый кабинет</h1></div>
 <form method="POST" class="post-form">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit" class="save btn btn-default">Сохранить</button>

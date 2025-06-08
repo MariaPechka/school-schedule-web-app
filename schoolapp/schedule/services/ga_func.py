@@ -16,7 +16,7 @@ import schedule.models as sch_models
 from .. import ga_seializers
 from .gcp_class import GraphColoringProblem
 from .elitism_func import eaSimpleWithElitism
-from .ga_class import ScheduleGAModel
+from .schedule_ga_model_class import ScheduleGAModel
 
 # Получаем все объекты нужных моделей
 # subjects = api_models.Subject.objects.all()
