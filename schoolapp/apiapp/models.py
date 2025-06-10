@@ -20,6 +20,7 @@ class Level(models.Model):
 class Eduparallel(models.Model):
     year = models.IntegerField(blank=False)
     level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True)
+    subjects = models.ManyToManyField(Subject, through='Complexity', related_name='rel_parallels')
 
     def __str__(self):
         return f'{str(self.year)}'
@@ -68,6 +69,7 @@ class Class(models.Model):
     letter = models.CharField(choices=LETTER_CHOICES, blank=False)
     own_classroom = models.OneToOneField(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
     student_amount = models.PositiveIntegerField()
+
 
     class Meta:
         constraints = [

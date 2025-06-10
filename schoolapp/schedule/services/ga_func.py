@@ -57,14 +57,17 @@ from .schedule_ga_model_class import ScheduleGAModel
 #         output_field=CharField()
 #         )
 #     )   
-#     lessons = list(classes.values_list(
-#                                     'class_name', 
-#                                     'eduparallel__edu_complexities__subject__id', 
-#                                     'eduparallel__edu_complexities__subject__title', 
-#                                     'eduparallel__edu_complexities__complexity', 
-#                                     'eduparallel__edu_complexities__hours_per_week'
-#                                     )
-#                     )
+classes = api_models.Class.objects.all()
+lessons = list(classes.values_list(
+                                # 'class_name', 
+                                'eduparallel__edu_complexities__subject__id', 
+                                'eduparallel__edu_complexities__subject__title', 
+                                'eduparallel__edu_complexities__complexity', 
+                                'eduparallel__edu_complexities__hours_per_week'
+                                )
+                )
+sbj = list(classes.values('eduparallel__edu_complexities__subject__title'))
+print(sbj)
 #     lessons_df = pd.DataFrame(lessons,
 #                             columns=[
 #                                 'class_name',
@@ -133,65 +136,65 @@ from .schedule_ga_model_class import ScheduleGAModel
 
 
 # Раскраска тест (успешно! :) Умничка!!!)
-G = ScheduleGAModel()
-gcp = GraphColoringProblem(G, 40)
-# solution = np.random.randint(40, size=len(gcp))
+# G = ScheduleGAModel()
+# gcp = GraphColoringProblem(G, 40)
+# # solution = np.random.randint(40, size=len(gcp))
 
 
-# plot = gcp.plotGraph(solution)
-# plot.show()
+# # plot = gcp.plotGraph(solution)
+# # plot.show()
 
 
-# Пробую ГА на функциях класса gcpz 
-POPULATION_SIZE = 350
-P_CROSSOVER = 0.9
-P_MUTATION = 0.4
-MAX_GENERATIONS = 300
-HALL_OF_FAME_SIZE = 5
-MAX_COLORS = 40
+# # Пробую ГА на функциях класса gcpz 
+# POPULATION_SIZE = 350
+# P_CROSSOVER = 0.9
+# P_MUTATION = 0.4
+# MAX_GENERATIONS = 300
+# HALL_OF_FAME_SIZE = 5
+# MAX_COLORS = 40
 
-stats = tools.Statistics(lambda ind: ind.fitness.values)
-stats.register("min", np.min)
-stats.register("avg", np.mean)
+# stats = tools.Statistics(lambda ind: ind.fitness.values)
+# stats.register("min", np.min)
+# stats.register("avg", np.mean)
 
-hof = tools.HallOfFame(HALL_OF_FAME_SIZE)
+# hof = tools.HallOfFame(HALL_OF_FAME_SIZE)
 
-creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-creator.create("Individual", list, fitness=creator.FitnessMin)
+# creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+# creator.create("Individual", list, fitness=creator.FitnessMin)
 
-toolbox = base.Toolbox()
-toolbox.register("Integers", random.randint, 0, MAX_COLORS - 1)
-toolbox.register("individualCreator", tools.initRepeat,
-creator.Individual, toolbox.Integers, len(gcp))
-toolbox.register("populationCreator", tools.initRepeat, list,
-toolbox.individualCreator)
+# toolbox = base.Toolbox()
+# toolbox.register("Integers", random.randint, 0, MAX_COLORS - 1)
+# toolbox.register("individualCreator", tools.initRepeat,
+# creator.Individual, toolbox.Integers, len(gcp))
+# toolbox.register("populationCreator", tools.initRepeat, list,
+# toolbox.individualCreator)
 
-def getCost(individual):
-    return gcp.getCost(individual), 
-toolbox.register("evaluate", getCost)
+# def getCost(individual):
+#     return gcp.getCost(individual), 
+# toolbox.register("evaluate", getCost)
 
-toolbox.register("select", tools.selTournament, tournsize=3)
-toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutUniformInt, low=0,
-up=MAX_COLORS - 1, indpb=1.0/len(gcp))
+# toolbox.register("select", tools.selTournament, tournsize=3)
+# toolbox.register("mate", tools.cxTwoPoint)
+# toolbox.register("mutate", tools.mutUniformInt, low=0,
+# up=MAX_COLORS - 1, indpb=1.0/len(gcp))
 
-population = toolbox.populationCreator(n=POPULATION_SIZE)
+# population = toolbox.populationCreator(n=POPULATION_SIZE)
 
-population, logbook = eaSimpleWithElitism(population,
-toolbox, cxpb=P_CROSSOVER, mutpb=P_MUTATION,
-ngen=MAX_GENERATIONS, stats=stats, halloffame=hof, verbose=True)
+# population, logbook = eaSimpleWithElitism(population,
+# toolbox, cxpb=P_CROSSOVER, mutpb=P_MUTATION,
+# ngen=MAX_GENERATIONS, stats=stats, halloffame=hof, verbose=True)
 
-solution = hof.items[0]
-print("Лучший индивидуум = ", )
-print("solution = ", solution)
-print("number of colors = ", gcp.getNumberOfColors(solution))
-print("Number of violations = ", gcp.getViolationsCount(solution))
-print("Cost = ", gcp.getCost(solution))
+# solution = hof.items[0]
+# print("Лучший индивидуум = ", )
+# print("solution = ", solution)
+# print("number of colors = ", gcp.getNumberOfColors(solution))
+# print("Number of violations = ", gcp.getViolationsCount(solution))
+# print("Cost = ", gcp.getCost(solution))
 
-minFitnessValues, meanFitnessValues = logbook.select("min", "avg")
-plt.plot(minFitnessValues, color='red')
-plt.plot(meanFitnessValues, color='green')
-plt.xlabel('Поколение')
-plt.ylabel('Макс/средняя приспособленность')
-plt.title('Зависимость максимальной и средней приспособленности от поколения')
-plt.show()
+# minFitnessValues, meanFitnessValues = logbook.select("min", "avg")
+# plt.plot(minFitnessValues, color='red')
+# plt.plot(meanFitnessValues, color='green')
+# plt.xlabel('Поколение')
+# plt.ylabel('Макс/средняя приспособленность')
+# plt.title('Зависимость максимальной и средней приспособленности от поколения')
+# plt.show()

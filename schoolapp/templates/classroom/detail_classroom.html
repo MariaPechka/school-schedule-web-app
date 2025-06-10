@@ -1,16 +1,12 @@
 {% extends 'classroom/base_classroom.html' %} {% block content %}
 <div class="obj">
-  <a
-    class="btn btn-default trash"
-    href="{% url 'classroom_delete' pk=classroom.pk %}"
+  <a class="btn trash" href="{% url 'classroom_delete' pk=classroom.pk %}"
     ><span class="glyphicon glyphicon-trash"></span
   ></a>
   <h1>{{ classroom.name }}</h1>
   <p>{{ classroom.type|linebreaksbr }}</p>
   <p>{{ classroom.capacity|linebreaksbr }}</p>
-  <a
-    class="btn btn-default pencil"
-    href="{% url 'classroom_edit' pk=classroom.pk %}"
+  <a class="btn pencil" href="{% url 'classroom_edit' pk=classroom.pk %}"
     ><span class="glyphicon glyphicon-pencil"></span
   ></a>
 </div>

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.db.models.functions import Concat
+from django.db.models import Value, CharField, F
 from rest_framework.viewsets import ModelViewSet
 import requests
 
@@ -9,11 +11,12 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
+from django.contrib.postgres.aggregates import ArrayAgg
 
 
 from apiapp.models import Level,  Eduparallel, Subject, Complexity
 from apiapp import models
-from apiapp.serializers import LevelSerializer, EduarallelSerializer
+from apiapp.serializers import LevelSerializer, EduparallelSerializer
 from apiapp.serializers import SubjectSerializer, ComplexitySerializer
 from apiapp import serializers
 from apiapp import forms
@@ -26,7 +29,7 @@ class LevelViewSet(ModelViewSet):
 
 class EduparallelViewSet(ModelViewSet):
     queryset = Eduparallel.objects.all()
-    serializer_class = EduarallelSerializer
+    serializer_class = EduparallelSerializer
 
 
 class SubjectViewSet(ModelViewSet):
@@ -56,8 +59,57 @@ class ComplexityViewSet(ModelViewSet):
 
 
 # Schedule Methods
+# def schedule_prepare(request):
+#     classes_row = models.Eduparallel.objects.all()
+#     classes = serializers.EduparallelSerializer(classes_row, many=True).data
+#     return render(request, 'schedule/prepare_schedule.html', {'classes': classes})
+    
 def schedule_prepare(request):
-    return render(request, 'schedule/prepare_schedule.html')#, {'classrooms': classrooms})
+    classes = models.Class.objects.all().annotate(
+        # subjects = 'eduparallel'.filter()
+        subjects = ArrayAgg('eduparallel__edu_complexities__subject__title'),
+        complexitys = ArrayAgg('eduparallel__edu_complexities__complexity'),
+        hours = ArrayAgg('eduparallel__edu_complexities__hours_per_week'),
+        class_name = Concat(
+            'eduparallel__year', 'letter',
+            output_field=CharField()),
+        # zip_sch = zip('subjects', 'complexity', 'hours')
+    ).order_by('eduparallel', 'letter')
+    sbj_len = []
+    zip_mas = []
+    for class_obj in classes:
+        zip_mas.append(zip(class_obj.subjects, 
+                           class_obj.complexitys, 
+                           class_obj.hours))
+        sbj_len.append(len(class_obj.subjects)+1)
+    print(sbj_len)
+    # context = {}
+    # for class_sbj in classes:
+    #     context['class_sbj']= class_sbj
+      
+    # compmas = [class_obj.complexitys for class_obj in classes ]
+    # hmas = [class_obj.hours for class_obj in classes ]
+    # zip_sch = zip(sbjmas,
+    #               compmas, 
+    #               hmas)
+    # print(zip_mas)
+    zip_all = zip(classes, zip_mas, sbj_len)
+    # classes = serializers.ClassSerializer(classes_row, many=True).data
+    return render(request, 'schedule/prepare_schedule.html', {'classes': zip_all}) #{'classes': classes, 'sch': zip_mas})
+    
+
+# def schedule_prepare(request):
+#     classes = models.Class.objects.all().annotate(
+#         # subjects = 'eduparallel'.filter()
+#         subject = F('eduparallel__edu_complexities__subject__title'),
+#         complexity = F('eduparallel__edu_complexities__complexity'),
+#         hours = F('eduparallel__edu_complexities__hours_per_week'),
+#         class_name = Concat(
+#             'eduparallel__year', 'letter',
+#             output_field=CharField())
+#     ).order_by('eduparallel', 'letter')
+#     # classes = serializers.ClassSerializer(classes_row, many=True).data
+#     return render(request, 'schedule/prepare_schedule.html', {'classes': classes})
     
 
 # Classroom Methods
