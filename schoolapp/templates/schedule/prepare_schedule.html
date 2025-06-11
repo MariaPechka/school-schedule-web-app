@@ -1,71 +1,35 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link
-      rel="stylesheet"
-      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"
-    />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
-  </head>
-  <body>
-    <div class="page-header">
-      <a href="{% url 'schedule_prepare' %}" class="top-menu"
-        ><span class="glyphicon glyphicon-calendar"></span
-      ></a>
-      <a href="{% url 'class_list' %}" class="top-menu"
-        ><span class="page">Класс</span></a
-      >
-      <a href="{% url 'classroom_list' %}" class="top-menu"
-        ><span class="page">Кабинет</span></a
-      >
-      <a href="{% url 'teacher_list' %}" class="top-menu"
-        ><span class="page">Учитель</span></a
-      >
-      <h1><a href="/">SSWA</a></h1>
-    </div>
-    <div class="content container">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="header-name">
-            <h1>Данные, для которых будет составляться расписание</h1>
-          </div>
-          <table class="schedule-data-table">
-            <caption>
-              Классы
-            </caption>
-            <tr>
-              <th>Класс</th>
-              <th>Кол-во учеников</th>
-              <th>Предметы</th>
-              <th>Академ часы</th>
-              <th>Сложность</th>
-            </tr>
+{% extends 'schedule/base_schedule.html' %} {% block content %}
+  <div class="header-name">
+    <h1>Данные, для которых будет составляться расписание</h1>
+  </div>
+  <a class="btn make-schedule" href="{% url 'start_ga' %}">Составить расписание</a>
+  <table class="schedule-data-table">
+    <caption>
+      Классы
+    </caption>
+    <tr>
+      <th>Класс</th>
+      <th>Кол-во учеников</th>
+      <th>Предметы</th>
+      <th>Академ часы</th>
+      <th>Сложность</th>
+    </tr>
 
-            {% for class, sch, sbj_amount in classes %}
+    {% for class, sch, sbj_amount in classes %}
 
-            <tr>
-              <td rowspan="{{sbj_amount}}">{{ class.class_name }}</td>
-              <td rowspan="{{sbj_amount}}">{{ class.student_amount }}</td>
-            </tr>
-            {% for sbj, comp, h in sch %}
-            <tr>
-              <td>{{ sbj }}</td>
-              <td>{{ h }}</td>
-              <td>{{ comp }}</td>
-            </tr>
-            <wbr />
-            {% endfor %} {% endfor %}
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>
-</html>
+    <tr>
+      <td rowspan="{{sbj_amount}}">{{ class.class_name }}</td>
+      <td rowspan="{{sbj_amount}}">{{ class.student_amount }}</td>
+    </tr>
+    {% for sbj, comp, h in sch %}
+    <tr>
+      <td>{{ sbj }}</td>
+      <td>{{ h }}</td>
+      <td>{{ comp }}</td>
+    </tr>
+    <wbr />
+    {% endfor %} {% endfor %}
+  </table>
+</div>
+{% endblock %}
+

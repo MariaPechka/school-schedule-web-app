@@ -6,6 +6,7 @@ from django.db.models.functions import Concat
 from django.db.models import Value, CharField, F
 from rest_framework.viewsets import ModelViewSet
 import requests
+import time
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -42,38 +43,15 @@ class ComplexityViewSet(ModelViewSet):
     serializer_class = ComplexitySerializer
 
 
-# class TeacherViewSet(ModelViewSet):
-#     queryset = models.Teacher.objects.all()#.prefetch_related('subjects')
-#     serializer_class = serializers.TeacherSerializer
-
-#     @action(methods=['get'], detail=False)
-#     def lists(self, request):
-#         return render(request, 'teacher/list_teacher.html', {'teachers': self.queryset})
-    
-
-#     @action(methods=['get'], detail=False)
-#     def teacher_detail(self, request, **kwargs):
-#         pk = kwargs.keys
-#         # teacher = get_object_or_404(models.Teacher, pk=pk)
-#         return render(request, 'teacher/detail_teacher.html', {'k':pk})
-
-
 # Schedule Methods
-# def schedule_prepare(request):
-#     classes_row = models.Eduparallel.objects.all()
-#     classes = serializers.EduparallelSerializer(classes_row, many=True).data
-#     return render(request, 'schedule/prepare_schedule.html', {'classes': classes})
-    
 def schedule_prepare(request):
     classes = models.Class.objects.all().annotate(
-        # subjects = 'eduparallel'.filter()
         subjects = ArrayAgg('eduparallel__edu_complexities__subject__title'),
         complexitys = ArrayAgg('eduparallel__edu_complexities__complexity'),
         hours = ArrayAgg('eduparallel__edu_complexities__hours_per_week'),
         class_name = Concat(
             'eduparallel__year', 'letter',
             output_field=CharField()),
-        # zip_sch = zip('subjects', 'complexity', 'hours')
     ).order_by('eduparallel', 'letter')
     sbj_len = []
     zip_mas = []
@@ -82,35 +60,23 @@ def schedule_prepare(request):
                            class_obj.complexitys, 
                            class_obj.hours))
         sbj_len.append(len(class_obj.subjects)+1)
-    print(sbj_len)
-    # context = {}
-    # for class_sbj in classes:
-    #     context['class_sbj']= class_sbj
-      
-    # compmas = [class_obj.complexitys for class_obj in classes ]
-    # hmas = [class_obj.hours for class_obj in classes ]
-    # zip_sch = zip(sbjmas,
-    #               compmas, 
-    #               hmas)
-    # print(zip_mas)
+    
     zip_all = zip(classes, zip_mas, sbj_len)
-    # classes = serializers.ClassSerializer(classes_row, many=True).data
     return render(request, 'schedule/prepare_schedule.html', {'classes': zip_all}) #{'classes': classes, 'sch': zip_mas})
     
 
-# def schedule_prepare(request):
-#     classes = models.Class.objects.all().annotate(
-#         # subjects = 'eduparallel'.filter()
-#         subject = F('eduparallel__edu_complexities__subject__title'),
-#         complexity = F('eduparallel__edu_complexities__complexity'),
-#         hours = F('eduparallel__edu_complexities__hours_per_week'),
-#         class_name = Concat(
-#             'eduparallel__year', 'letter',
-#             output_field=CharField())
-#     ).order_by('eduparallel', 'letter')
-#     # classes = serializers.ClassSerializer(classes_row, many=True).data
-#     return render(request, 'schedule/prepare_schedule.html', {'classes': classes})
-    
+
+def start_ga(request):
+    render(request, 'schedule/ga_work.html')
+    time.sleep(3)
+    return redirect('show_ga_solution')
+
+def show_ga_solution(request):
+    from schedule.services.ga_func import run_ga, schedule_from_nodes
+    resolt = run_ga()
+    schedule = schedule_from_nodes(resolt[0], resolt[1])
+    return render(request, 'schedule/schedule.html', {'sch_test': schedule})
+
 
 # Classroom Methods
 def classroom_list(request):
@@ -234,26 +200,3 @@ def teacher_delete(request, pk):
 def add_schooluser(request):
     form = forms.SchoolUserForm()
     return render(request, 'schooluser_edit.html', {'form': form})
-
-
-
-
-
-
-
-# Create your views here.
-# def show_lessons(request):
-#     all_complexity = Complexity.objects.all()
-#     all_eduparallel = Eduparallel.objects.all()
-#     return render (request=request, template_name='lessons.html', context={'comp_list': all_complexity, 'eduparal_list': all_eduparallel})
-
-
-
-# def get_complexity(request):
-#     headers = {
-#         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0'
-#     }
-#     url = 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fsh-pavlovskaya-r66.gosweb.gosuslugi.ru%2Fnetcat_files%2F22%2F3341%2FShkala_trudnosti_uchebnyh_predmetov.doc&wdOrigin=BROWSELINK'
-#     response = requests.get(url, headers=headers)
-#     print(type(response))
-#     return HttpResponse('Good!')

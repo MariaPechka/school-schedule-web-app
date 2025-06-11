@@ -1,7 +1,7 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>School-schedule-web-app</title>
     <link
       rel="stylesheet"
       href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
@@ -10,18 +10,13 @@
       rel="stylesheet"
       href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"
     />
-    <link
-      href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
   </head>
   <body>
     <div class="page-header">
-      <a href="{% url 'classroom_add' %}" class="top-menu"
-        ><span class="glyphicon glyphicon-plus"></span
-      ></a>
       <a href="{% url 'schedule_prepare' %}" class="top-menu"
         ><span class="glyphicon glyphicon-calendar"></span
       ></a>

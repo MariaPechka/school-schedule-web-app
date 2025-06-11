@@ -28,9 +28,6 @@ router.register(r'level', LevelViewSet)
 router.register(r'eduparallel', EduparallelViewSet)
 router.register(r'subject', SubjectViewSet)
 router.register(r'complexity', ComplexityViewSet)
-# router.register(r'teachers', views.TeacherViewSet, basename='teacher')
-# router.register(r'add_classroom', add_classroom)
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -54,10 +51,11 @@ urlpatterns = [
     path('teacher/<int:pk>/delete', views.teacher_delete, name='teacher_delete'),
 
     path('schedule/prepare', views.schedule_prepare, name='schedule_prepare'),
+    path('schedule/loading', views.start_ga, name='start_ga'),
+    path('schedule/solution', views.show_ga_solution, name='show_ga_solution'),
+
     # path('post/teacher/', views.add_teacher, name='add_teacher'),
 
-    path('post/school-user/', views.add_schooluser, name='add_schooluser'),
-    # path('lessons/', show_lessons),
-    # path('', get_complexity)
+    # path('post/school-user/', views.add_schooluser, name='add_schooluser'),
 ]
 urlpatterns += router.urls
