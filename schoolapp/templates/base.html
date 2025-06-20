@@ -1,0 +1,47 @@
+{% load static %}
+<html>
+  <head>
+    <title>School-schedule-web-app</title>
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"
+    />
+    <link
+      href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+  </head>
+  <body>
+    <div class="page-header">
+      <a href="{% url 'class_add' %}" class="top-menu"
+        ><span class="glyphicon glyphicon-plus"></span
+      ></a>
+      <a href="{% url 'schedule_prepare' %}" class="top-menu"
+        ><span class="glyphicon glyphicon-calendar"></span
+      ></a>
+
+      <a href="{% url 'class_list' %}" class="top-menu"
+        ><span class="page">Класс</span></a
+      >
+      <a href="{% url 'classroom_list' %}" class="top-menu"
+        ><span class="page">Кабинет</span></a
+      >
+      <a href="{% url 'teacher_list' %}" class="top-menu"
+        ><span class="page">Учитель</span></a
+      >
+
+      <h1><a href="/">SSWA</a></h1>
+    </div>
+    <div class="content container">
+      <div class="row">
+        <div class="col">{% block content %} {% endblock %}</div>
+      </div>
+    </div>
+  </body>
+</html>

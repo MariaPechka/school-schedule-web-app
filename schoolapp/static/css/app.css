@@ -164,6 +164,10 @@ th {
   border-bottom: 2px solid #6678b1;
   padding: 10px 8px;
 }
+.classrow,
+.tdclassrow {
+  border-bottom: 2px solid #6678b1;
+}
 td {
   color: #669;
   padding: 2px 2px;

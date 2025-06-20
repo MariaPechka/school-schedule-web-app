@@ -91,6 +91,18 @@ class Teacher(models.Model):
         return f'{self.surname} {self.first_name} {self.last_name}'
 
 
+class Lesson(models.Model):
+    class_id = models.ForeignKey(Class, on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, blank=True)
+
+    class Meta:
+        constraints = [ 
+            models.UniqueConstraint(fields=['class_id', 'subject_id', 'teacher_id'],
+                                              name='unique_lesson'),
+        ]
+
+
 class SchoolUser(models.Model):
     surname = models.CharField(max_length=50, blank=False)
     first_name = models.CharField(max_length=50, blank=False)

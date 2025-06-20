@@ -13,7 +13,7 @@ from django.db.models import Value, CharField
 from django.db.models.functions import Concat
 
 from apiapp import models
-from .ga_func import eaSimpleWithElitism
+# from .ga_func import eaSimpleWithElitism
 
 
 class GraphColoringProblem:
@@ -116,7 +116,7 @@ class GraphColoringProblem:
             font_size=10, with_labels=True)
         #nx.draw_circular(self.graph, node_color=color_map, with_labels=True)
 
-        return plt
+        plt.show()
 
 
 class ScheduleGAModel:
@@ -230,7 +230,7 @@ class ScheduleGAModel:
             'width': 1,
             'font_size': 10,
         }
-        nx.draw_networkx(self.G, pos=nx.spring_layout(self.G), with_labels = False, arrows=False, **options)
+        nx.draw_networkx(self.G, pos=nx.spring_layout(self.G), with_labels = True, arrows=False, **options)
         plt.show()
 
 
@@ -253,9 +253,9 @@ class ScheduleGSPGA(ScheduleGAModel, GraphColoringProblem):
         """
 
         return self.hardConstraintPenalty * self.getViolationsCount(colorArrangement) +\
-            30*sum(self.no_first_3_lessons(colorArrangement)) +\
-            12*self.gaps_per_day(colorArrangement) +\
-            5*self.max_lessons(colorArrangement) +\
+            40*sum(self.no_first_3_lessons(colorArrangement)) +\
+            35*self.gaps_per_day(colorArrangement) +\
+            20*self.max_lessons(colorArrangement) +\
             self.getNumberOfColors(colorArrangement)
 
     
@@ -265,43 +265,130 @@ class ScheduleGSPGA(ScheduleGAModel, GraphColoringProblem):
         
         count_1 = self.classesAmount*5 - sum([colorArrangement.count(first) for first in range(0,40,8)]) 
         count_2 = self.classesAmount*5 - sum([colorArrangement.count(second) for second in range(1,40,8)])
-        count_3 = self.classesAmount*5 - sum([colorArrangement.count(third) for third in range(2,40,8)]) 
+        count_3 = self.classesAmount*5 - sum([colorArrangement.count(third) for third in range(2,40,8)])
+        count_1 = count_1 if count_1 > 0 else 0
+        count_2 = count_2 if count_2 > 0 else 0
+        count_3 = count_3 if count_3 > 0 else 0
+
         return count_1, count_2, count_3
 
     def gaps_per_day(self, colorArrangement):
         if len(colorArrangement) != self.__len__():
             raise ValueError("size of color arrangement should be equal to ", self.__len__())
         
+        class_lessons_lens = [len(class_obj) for class_obj in self.GLessonNodes]
+        # class_names = [class_obj[0].split('.')[0] for class_obj in self.GLessonNodes]
+        
         count_gaps = 0      
-        for day in range(0, 40, 8):
-            for i in range(day, day+8):
-                amount_i = colorArrangement.count(i)
-                amount_next_i = colorArrangement.count(i+1)
-                diff = amount_i - amount_next_i
-                if diff < 0:
-                    # print(i, '&', i+1, 'diff =', diff)
-                    count_gaps += abs(diff)
+        count = 0
+        # for i, name in zip(class_lessons_lens, class_names):
+        #     print(name)
+        for i in class_lessons_lens:
+            class_lessons_range = colorArrangement[count: count+i]
+            
+            # for day_name, day in zip(range(1,6), range(0,40,8)):
+            for day in range(0,40,8):
+                mask = [lesson in class_lessons_range for lesson in range(day, day+8)]
+                # print(day_name, '-->', mask)
+                work_hours = 0
+                for lesson in range(7,0,-1):
+                    if mask[lesson]:
+                        work_hours = lesson
+                        break
+                count_per_day = mask[0:work_hours].count(False)
+                # print(day_name, '-->', count_per_day)
+                count_gaps += count_per_day
+                    
+            count += i
+            # print()
         return count_gaps
     
+    def more_then_1(self, colorArrangement):
+        pass
     def max_lessons(self, colorArrangement):
         if len(colorArrangement) != self.__len__():
             raise ValueError("size of color arrangement should be equal to ", self.__len__())
         
         class_lessons_lens = [len(class_obj) for class_obj in self.GLessonNodes]
+        # class_names = [class_obj[0].split('.')[0] for class_obj in self.GLessonNodes]
         
         too_much = 0
         count = 0
+        # for i, name in zip(class_lessons_lens, class_names):
         for i in class_lessons_lens:
+            # print(name)
             class_lessons = colorArrangement[count: count+i]
-            # print(class_lessons)
+
+            # for day_name, day in zip(range(1,6), range(0,40,8)):
             for day in range(0,40,8):
                 day_sum = 0
-                for l in range(day, day+8):
-                    day_sum +=  l in class_lessons
+                for lesson in range(day, day+8):
+                    day_sum +=  lesson in class_lessons
                 if day_sum > 5:
-                    too_much += 1
+                    too_much += day_sum - 5
+                    # too_much += 1
+                # print('day:', day_name, '-->', day_sum, 'lessons --> too_much', too_much)
+
             count += i
         return too_much
+    # def gaps_per_day(self, colorArrangement):
+    #     if len(colorArrangement) != self.__len__():
+    #         raise ValueError("size of color arrangement should be equal to ", self.__len__())
+        
+    #     class_lessons_lens = [len(class_obj) for class_obj in self.GLessonNodes]
+    #     class_names = [class_obj[0].split('.')[0] for class_obj in self.GLessonNodes]
+        
+    #     count_gaps = 0      
+    #     count = 0
+    #     for i, name in zip(class_lessons_lens, class_names):
+    #         print(name)
+    #     # for i in class_lessons_lens:
+    #         class_lessons_range = colorArrangement[count: count+i]
+            
+    #         for day_name, day in zip(range(1,6), range(0,40,8)):
+    #         # for day in range(0,40,8):
+    #             for lesson in range(day, day+8):
+    #                 if lesson == day+7 and \
+    #                     lesson in class_lessons_range and \
+    #                     lesson-2 not in class_lessons_range and \
+    #                     lesson-1 not in class_lessons_range:
+    #                     print('day:', day_name, lesson-1, '<--', lesson)
+    #                     count_gaps += 1
+    #                 elif lesson != day+7 and \
+    #                     not lesson in class_lessons_range and \
+    #                     lesson+1 in class_lessons_range :
+    #                     # (lesson+1 in class_lessons_range or \
+    #                     # lesson+2 in class_lessons_range) :
+    #                     # lesson-1 in class_lessons_range and \
+    #                     print('day:', day_name, lesson-1, '<--', lesson, '-->', lesson+1)
+    #                     count_gaps += 1
+    #                 elif lesson != day+7 and \
+    #                     lesson not in class_lessons_range and\
+    #                     lesson+1 not in class_lessons_range and\
+    #                     lesson-1 not in class_lessons_range :
+    #                     count_gaps += 1
+    #                     print('day:', day_name, lesson-1, '<--', lesson, '-->', lesson+1)
+                        
+                    
+    #         count += i
+    #         # print()
+    #     return count_gaps
+        
+    # def gaps_per_day(self, colorArrangement):
+    #     if len(colorArrangement) != self.__len__():
+    #         raise ValueError("size of color arrangement should be equal to ", self.__len__())
+        
+    #     count_gaps = 0      
+    #     for day in range(0, 40, 8):
+    #         for i in range(day, day+8):
+    #             amount_i = colorArrangement.count(i)
+    #             amount_next_i = colorArrangement.count(i+1)
+    #             diff = amount_i - amount_next_i
+    #             if diff < 0:
+    #                 # print(i, '&', i+1, 'diff =', diff)
+    #                 count_gaps += abs(diff)
+    #     return count_gaps
+    
 
 
                 

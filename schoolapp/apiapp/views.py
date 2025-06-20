@@ -72,9 +72,11 @@ def start_ga(request):
     return redirect('show_ga_solution')
 
 def show_ga_solution(request):
-    from schedule.services.ga_func import run_ga, schedule_from_nodes
+    from schedule.services.ga_func import run_ga, eaSimpleWithElitism, schedule_from_nodes, test_ga_slasses
     resolt = run_ga()
+    # resolt = test_ga_slasses()
     schedule = schedule_from_nodes(resolt[0], resolt[1])
+    
     return render(request, 'schedule/schedule.html', {'sch_test': schedule})
 
 

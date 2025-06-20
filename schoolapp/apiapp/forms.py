@@ -33,6 +33,17 @@ class ClassForm(forms.ModelForm):
         }
 
 
+class TeacherSubjectsClass(forms.ModelForm):
+    class Meta:
+        model = models.Lesson
+        fields = ('class_id', 'subject_id', 'teacher_id')
+        labels = {
+            'class_id': 'Класс',
+            'subject_id': 'Предмет',
+            'teacher_id': 'Учитель',
+        }
+
+
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = models.Teacher
